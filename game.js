@@ -182,8 +182,14 @@ const AudioSys = {
 
     init() {
         if (this.ctx) return;
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        this.ctx = new AudioContext();
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+                this.ctx = new AudioCtx();
+            }
+        } catch (e) {
+            console.warn("AudioContext init failed:", e);
+        }
     },
 
     playCoin() {
@@ -2313,16 +2319,21 @@ window.addEventListener("DOMContentLoaded", () => {
     // Action clicks
     const startRideBtn = document.getElementById("btn-start-ride");
     const launchGame = (e) => {
-        if (e) e.preventDefault();
-        
-        // Initialize and unlock audio under user gesture
-        AudioSys.init();
-        if (AudioSys.ctx && AudioSys.ctx.state === "suspended") {
-            AudioSys.ctx.resume();
+        try {
+            if (e) e.preventDefault();
+            
+            // Initialize and unlock audio under user gesture
+            AudioSys.init();
+            if (AudioSys.ctx && AudioSys.ctx.state === "suspended") {
+                AudioSys.ctx.resume();
+            }
+            
+            navigateTo("screen-gameplay");
+            Game.start();
+        } catch (err) {
+            console.error("Launch error:", err);
+            alert("Error starting game: " + err.message);
         }
-        
-        navigateTo("screen-gameplay");
-        Game.start();
     };
     startRideBtn.addEventListener("touchstart", launchGame, {passive: false});
     startRideBtn.addEventListener("click", launchGame);
