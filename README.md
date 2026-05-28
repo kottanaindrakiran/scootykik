@@ -1,7 +1,7 @@
 # ScootyKik 🛵
 **Ride India. Feel India.**
 
-Play now: [link]
+Play now: [scootykik.vercel.app](https://scootykik.vercel.app)
 
 A free Indian street racing game built as a Progressive Web App (PWA). Experience premium third-person riding physics, custom synthesized audio, and iconic Indian street sceneries.
 
