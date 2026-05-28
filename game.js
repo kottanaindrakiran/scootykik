@@ -3786,3 +3786,5 @@ function drawVehicleAtAngle(ctx, x, y, scale, vehicleName) {
 
     ctx.restore();
 }
+
+window.onerror = function(msg, url, lineNo, columnNo, error) { alert('Global Error: ' + msg + ' at line ' + lineNo); return false; }; window.addEventListener('unhandledrejection', function(event) { alert('Promise Error: ' + event.reason); });
