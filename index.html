@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScootyKik - Ride India. Feel India.</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+    <!-- PWA Integration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF9500">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+    <div class="game-wrapper">
+        <!-- Phone Mockup Container -->
+        <div class="phone-container">
+            <!-- Screen Notch/Status Bar -->
+            <div class="status-bar">
+                <span class="time">12:30 PM</span>
+                <div class="notch"></div>
+                <div class="network-icons">
+                    <span>5G</span>
+                    <div class="battery"></div>
+                </div>
+            </div>
+
+            <!-- Screen Area -->
+            <div class="screen-content">
+                
+                <!-- 0. LOADING SCREEN -->
+                <div id="screen-loading" class="screen active">
+                    <div class="brand-container loading-brand">
+                        <div class="logo-wrapper">
+                            <span class="logo-scooter">🛵</span>
+                            <h1>SCOOTY<br><span class="highlight">KIK</span></h1>
+                        </div>
+                        <p class="tagline">RIDE INDIA. FEEL INDIA.</p>
+                        <div class="tricolor-bar">
+                            <div class="orange"></div>
+                            <div class="white"></div>
+                            <div class="green"></div>
+                        </div>
+                    </div>
+                    <div class="loader-container">
+                        <div class="spinner"></div>
+                        <p class="loading-text">Loading street assets...</p>
+                    </div>
+                </div>
+
+                <!-- 1. MAIN MENU SCREEN -->
+                <div id="screen-main-menu" class="screen">
+                    <div class="header-hud">
+                        <div class="level-indicator">Lv. 8 <div class="level-progress"><div class="level-fill"></div></div></div>
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span id="menu-total-coins">12,450</span>
+                            <button class="add-coins-btn">+</button>
+                        </div>
+                    </div>
+
+                    <div class="brand-container">
+                        <div class="logo-wrapper">
+                            <span class="logo-scooter">🛵</span>
+                            <h1>SCOOTY<br><span class="highlight">KIK</span></h1>
+                        </div>
+                        <p class="tagline">RIDE INDIA. FEEL INDIA.</p>
+                        <div class="tricolor-bar">
+                            <div class="orange"></div>
+                            <div class="white"></div>
+                            <div class="green"></div>
+                        </div>
+                    </div>
+
+                    <!-- Best Record & Lifetime Coins Stats Bar -->
+                    <div class="menu-stats-row">
+                        <div class="menu-stat-item">
+                            <span class="lbl">🏆 BEST DISTANCE</span>
+                            <span id="val-best-distance" class="val">0.00 KM</span>
+                        </div>
+                        <div class="menu-stat-item">
+                            <span class="lbl">🪙 TOTAL COINS</span>
+                            <span id="val-total-coins" class="val">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Character Showcase (Avatar preview) -->
+                    <div class="character-preview-container">
+                        <div class="city-location-badge">📍 <span id="current-city-badge">Bangalore</span></div>
+                        <div class="preview-avatar-spot">
+                            <canvas id="menuCanvas" width="280" height="200"></canvas>
+                            <div id="menu-char-avatar" style="display:none;"></div>
+                        </div>
+                        <div class="rider-name-tag">
+                            <span id="menu-rider-name">ScootyKik Rider</span>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Buttons -->
+                    <div class="sidebar-buttons">
+                        <button class="side-btn" id="btn-city-select">
+                            <span class="icon">🗺️</span>
+                            <span class="label">RIDE</span>
+                        </button>
+                        <button class="side-btn" id="btn-character-select">
+                            <span class="icon">👤</span>
+                            <span class="label">RIDER</span>
+                        </button>
+                        <button class="side-btn" id="btn-vehicle-select">
+                            <span class="icon">🛵</span>
+                            <span class="label">GARAGE</span>
+                        </button>
+                        <button class="side-btn" id="btn-shop">
+                            <span class="icon">🛒</span>
+                            <span class="label">SHOP</span>
+                        </button>
+                    </div>
+
+                    <!-- Bottom Controls -->
+                    <div class="bottom-menu-actions">
+                        <button id="btn-start-ride" class="btn-primary">START RIDE ▶</button>
+                        <div class="daily-reward-card">
+                            <div class="gift-icon">🎁</div>
+                            <div class="reward-info">
+                                <span class="reward-title">DAILY REWARD</span>
+                                <span id="daily-reward-status">Ready to claim!</span>
+                            </div>
+                            <button id="btn-claim-daily" class="btn-claim">CLAIM</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. CHARACTER SELECTION SCREEN -->
+                <div id="screen-character-select" class="screen">
+                    <div class="screen-header">
+                        <button class="btn-back" id="char-back-btn">⬅</button>
+                        <h2>SELECT CHARACTER</h2>
+                        <div class="coin-display inline">
+                            <span>🪙</span>
+                            <span class="total-coins-val">12,450</span>
+                        </div>
+                    </div>
+
+                    <div class="showcase-layout">
+                        <!-- Left: Character Preview & Stats -->
+                        <div class="character-details-panel">
+                            <div class="char-model-view">
+                                <button class="swipe-arrow left-arrow" id="char-prev-arrow">◀</button>
+                                <canvas id="charSelectCanvas" width="220" height="240"></canvas>
+                                <button class="swipe-arrow right-arrow" id="char-next-arrow">▶</button>
+                                <div id="char-showcase-graphic" style="display:none;">👤</div>
+                            </div>
+                            <div class="char-info-card">
+                                <h3 id="char-showcase-name">ScootyKik Rider</h3>
+                                <p id="char-showcase-desc">Ride India. Feel India.</p>
+                                
+                                <div class="stat-bar-group">
+                                    <div class="stat-row">
+                                        <span>SPEED</span>
+                                        <div class="bar-bg"><div id="char-stat-speed" class="bar-fill red" style="width: 50%"></div></div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>CONTROL</span>
+                                        <div class="bar-bg"><div id="char-stat-control" class="bar-fill orange" style="width: 60%"></div></div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>STAMINA</span>
+                                        <div class="bar-bg"><div id="char-stat-stamina" class="bar-fill green" style="width: 60%"></div></div>
+                                    </div>
+                                </div>
+                                <div class="rank-tag">RANK <span id="char-showcase-rank">18</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Scrolling Character List -->
+                        <div class="items-list-scroller horizontal-scroller" id="character-list-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <button id="btn-confirm-character" class="btn-primary select-action-btn">SELECT</button>
+                </div>
+
+                <!-- 3. VEHICLE SELECTION SCREEN -->
+                <div id="screen-vehicle-select" class="screen">
+                    <div class="screen-header">
+                        <button class="btn-back" id="vehicle-back-btn">⬅</button>
+                        <h2>SELECT VEHICLE</h2>
+                        <div class="coin-display inline">
+                            <span>🪙</span>
+                            <span class="total-coins-val">12,450</span>
+                        </div>
+                    </div>
+
+                    <div class="showcase-layout">
+                        <!-- Left: Vehicle Preview & Stats -->
+                        <div class="character-details-panel">
+                            <div class="char-model-view vehicle-view">
+                                <button class="swipe-arrow left-arrow" id="vehicle-prev-arrow">◀</button>
+                                <canvas id="vehicleSelectCanvas" width="220" height="240"></canvas>
+                                <button class="swipe-arrow right-arrow" id="vehicle-next-arrow">▶</button>
+                                <div id="vehicle-showcase-graphic" style="display:none;">🛵</div>
+                            </div>
+                            <div class="char-info-card">
+                                <h3 id="vehicle-showcase-name">Scooty</h3>
+                                <p id="vehicle-showcase-desc">Default balanced vehicle.</p>
+                                
+                                <div class="stat-bar-group">
+                                    <div class="stat-row">
+                                        <span>SPEED</span>
+                                        <div class="bar-bg"><div id="vehicle-stat-speed" class="bar-fill red" style="width: 50%"></div></div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>CONTROL</span>
+                                        <div class="bar-bg"><div id="vehicle-stat-control" class="bar-fill orange" style="width: 60%"></div></div>
+                                    </div>
+                                    <div class="stat-row">
+                                        <span>STAMINA</span>
+                                        <div class="bar-bg"><div id="vehicle-stat-stamina" class="bar-fill green" style="width: 60%"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Scrolling Vehicle List -->
+                        <div class="items-list-scroller horizontal-scroller" id="vehicle-list-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <button id="btn-confirm-vehicle" class="btn-primary select-action-btn">SELECT</button>
+                </div>
+
+                <!-- 4. CITY/ROAD SELECTION SCREEN -->
+                <div id="screen-city-select" class="screen">
+                    <div class="screen-header">
+                        <button class="btn-back" id="city-back-btn">⬅</button>
+                        <h2>SELECT THEME</h2>
+                        <div class="coin-display inline">
+                            <span>🪙</span>
+                            <span class="total-coins-val">12,450</span>
+                        </div>
+                    </div>
+
+                    <div class="city-grid-container" id="city-list-container">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <button id="btn-confirm-city" class="btn-primary select-action-btn">SELECT THEME</button>
+                </div>
+
+                <!-- 5. SHOP SCREEN -->
+                <div id="screen-shop" class="screen">
+                    <div class="screen-header">
+                        <button class="btn-back" id="shop-back-btn">⬅</button>
+                        <h2>SHOP</h2>
+                        <div class="coin-display inline">
+                            <span>🪙</span>
+                            <span class="total-coins-val">12,450</span>
+                        </div>
+                    </div>
+
+                    <div class="shop-content">
+                        <div class="shop-tabs">
+                            <button id="tab-shop-characters" class="shop-tab active">RIDERS</button>
+                            <button id="tab-shop-vehicles" class="shop-tab">VEHICLES</button>
+                            <button id="tab-shop-coin-boosts" class="shop-tab">BOOSTS</button>
+                            <button id="tab-shop-ads" class="shop-tab">AD REWARDS</button>
+                        </div>
+                        
+                        <div class="shop-items-grid">
+                            <div class="shop-card">
+                                <h3>Double Coins Boost</h3>
+                                <p>Get 2x coins on all runs for 5 minutes!</p>
+                                <span class="cost">🎁 Watch Ad</span>
+                                <button class="btn-buy-shop" id="btn-shop-double-coins">WATCH AD</button>
+                            </div>
+                            <div class="shop-card">
+                                <h3>Free Coins Pack</h3>
+                                <p>Instantly claim 500 bonus coins!</p>
+                                <span class="cost">🎁 Watch Ad</span>
+                                <button class="btn-buy-shop" id="btn-shop-free-coins">WATCH AD</button>
+                            </div>
+                            <div class="shop-card">
+                                <h3>VIP Supporter Coin Pack</h3>
+                                <p>Get 2000 coins instantly!</p>
+                                <span class="cost">🪙 0 Coins (Dev Test)</span>
+                                <button class="btn-buy-shop" id="btn-shop-dev-coins">CLAIM</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. GAMEPLAY HUD SCREEN -->
+                <div id="screen-gameplay" class="screen">
+                    <!-- Canvas for rendering the 2.5D game road/vehicles -->
+                    <canvas id="gameCanvas" width="360" height="640"></canvas>
+
+                    <!-- Top HUD Indicators -->
+                    <div class="hud-top-container">
+                        <div class="hud-left">
+                            <button class="hud-btn" id="hud-btn-pause">⏸</button>
+                            <button class="hud-btn" id="hud-btn-camera">📷</button>
+                        </div>
+                        
+                        <div class="hud-right">
+                            <div class="hud-stat-badge">
+                                <span class="hud-icon">🪙</span>
+                                <span id="hud-coins">0</span>
+                            </div>
+                            <div class="hud-stat-badge">
+                                <span class="hud-icon">📍</span>
+                                <span id="hud-distance">0.0 KM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speed Boost Stamina Bar -->
+                    <div class="hud-stamina-container">
+                        <div class="stamina-label">BOOST STAMINA</div>
+                        <div class="stamina-progress-bg">
+                            <div id="hud-stamina-fill" class="stamina-progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pothole Stunned Overlay -->
+                    <div id="stunned-alert" class="hud-alert-overlay">
+                        <span class="warning-emoji">⚠️</span> STUNNED! (Pothole Slowdown)
+                    </div>
+
+                    <!-- School Zone Indicator -->
+                    <div id="slowzone-alert" class="hud-alert-overlay slow-zone">
+                        🚸 SCHOOL ZONE - SLOW DOWN!
+                    </div>
+
+                    <!-- Audio Horn indicator -->
+                    <div id="horn-blast-effect" class="horn-flash">🔊 HORN BLOWN!</div>
+
+                    <!-- Screen Flash (Red when hit, White for screenshot) -->
+                    <div id="screen-flash" class="screen-flash-layer"></div>
+
+                    <!-- Bottom Controls -->
+                    <div class="hud-bottom-controls">
+                        <!-- Left Lane Switch Buttons -->
+                        <div class="movement-controls">
+                            <button class="control-btn" id="ctrl-btn-left">⬅</button>
+                            <button class="control-btn" id="ctrl-btn-right">➡</button>
+                        </div>
+
+                        <!-- Right Actions Buttons -->
+                        <div class="action-controls">
+                            <!-- Horn Button -->
+                            <button class="action-btn horn-btn" id="ctrl-btn-horn">
+                                <span class="btn-icon">📯</span>
+                            </button>
+                            <!-- Speed Boost Button (Hold) -->
+                            <button class="action-btn boost-btn" id="ctrl-btn-boost">
+                                <span class="btn-icon">⚡</span>
+                                <span class="btn-text">SPEED</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pause Overlay Screen -->
+                    <div id="pause-overlay" class="overlay-panel">
+                        <div class="overlay-content pause-content">
+                            <div class="pause-logo">SCOOTY<span class="highlight">KIK</span></div>
+                            <h2>GAME PAUSED</h2>
+                            <div class="pause-stats">
+                                <div class="pause-stat-unit">
+                                    <span class="pause-stat-label">DISTANCE</span>
+                                    <span id="pause-dist-val" class="pause-stat-val">0.0 KM</span>
+                                </div>
+                                <div class="pause-stat-unit">
+                                    <span class="pause-stat-label">COINS</span>
+                                    <span id="pause-coins-val" class="pause-stat-val">0</span>
+                                </div>
+                            </div>
+                            <button id="btn-resume" class="btn-primary">RESUME</button>
+                            <button id="btn-quit" class="btn-secondary">QUIT TO MENU</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. GAME OVER SCREEN -->
+                <div id="screen-game-over" class="screen">
+                    <div class="gameover-container">
+                        <h1 class="gameover-title">CRASHED!</h1>
+                        
+                        <div id="gameover-status-msg" class="death-reason-msg">
+                            Did that cow just judge your driving skills?
+                        </div>
+
+                        <!-- Score card block -->
+                        <div class="score-card-box">
+                            <div class="card-brand">🛵 SCOOTYKIK</div>
+                            <div class="card-row">
+                                <span class="card-label">RIDER</span>
+                                <span id="go-rider-val" class="card-val">Farmer Boy</span>
+                            </div>
+                            <div class="card-row">
+                                <span class="card-label">VEHICLE</span>
+                                <span id="go-vehicle-val" class="card-val">Race Car</span>
+                            </div>
+                            <hr class="card-divider">
+                            <div class="card-stats-grid">
+                                <div class="card-stat-unit">
+                                    <span class="card-stat-title">DISTANCE</span>
+                                    <span id="go-distance-val" class="card-stat-val">3.2 KM</span>
+                                </div>
+                                <div class="card-stat-unit">
+                                    <span class="card-stat-title">COINS</span>
+                                    <span id="go-coins-val" class="card-stat-val">120</span>
+                                </div>
+                            </div>
+                            <div class="card-row highscore-row">
+                                <span class="card-label">🏆 BEST DISTANCE</span>
+                                <span id="go-best-val" class="card-val">12.4 KM</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="gameover-actions">
+                            <button id="btn-go-revive" class="btn-primary ad-revive-btn">
+                                📺 WATCH AD TO REVIVE
+                            </button>
+                            <button id="btn-go-share" class="btn-share-whatsapp">
+                                <span class="wa-icon">💬</span> SHARE TO WHATSAPP
+                            </button>
+                            <div class="dual-row">
+                                <button id="btn-go-restart" class="btn-secondary">RIDE AGAIN</button>
+                                <button id="btn-go-home" class="btn-secondary">HOME</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. MOCK REWARDED AD OVERLAY -->
+                <div id="ad-overlay" class="overlay-panel ad-panel">
+                    <div class="ad-container">
+                        <div class="ad-header">
+                            <span class="ad-tag">SPONSORED AD</span>
+                            <span id="ad-timer" class="ad-timer">5s</span>
+                        </div>
+                        <div class="ad-video-mock">
+                            <div class="ad-visual-icon">📺</div>
+                            <div class="ad-sponsor-name">Amul Butter</div>
+                            <div class="ad-tagline">"Utterly Butterly Delicious!"</div>
+                            <div class="ad-loading-bar"><div id="ad-loading-fill" class="ad-loading-fill"></div></div>
+                        </div>
+                        <div class="ad-footer">
+                            Ad closes automatically. Reviving after ad...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. SCREENSHOT SHARE FLASH CARD OVERLAY -->
+                <div id="screenshot-overlay" class="overlay-panel">
+                    <div class="screenshot-card">
+                        <h3>📷 SCREENSHOT CAPTURED!</h3>
+                        <div class="screenshot-preview-container">
+                            <canvas id="screenshotCanvas"></canvas>
+                        </div>
+                        <p>Share this score card on WhatsApp!</p>
+                        <button id="btn-close-screenshot" class="btn-primary">OK</button>
+                    </div>
+                </div>
+
+                <!-- PWA INSTALL BANNER DIALOG -->
+                <div id="pwa-install-banner" class="install-banner">
+                    <div class="banner-content">
+                        <span class="banner-icon">📱</span>
+                        <div class="banner-text">
+                            <h4>Add ScootyKik to Home Screen</h4>
+                            <p>For the best experience & offline play! 🛵</p>
+                        </div>
+                    </div>
+                    <div class="banner-actions">
+                        <button id="btn-pwa-close" class="btn-text-mini">Later</button>
+                        <button id="btn-pwa-install" class="btn-primary-mini">ADD TO HOME SCREEN</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JS File -->
+    <script src="game.js"></script>
+</body>
+</html>
