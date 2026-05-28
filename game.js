@@ -35,6 +35,19 @@ const themes = [
     { name: "Delhi Highway", cost: 1500, bg: "linear-gradient(135deg, #708090 0%, #D3D3D3 100%)", road: "#3e434f", line: "#ffffff", accent: "🌫️", msg: "DL 03", desc: "Thick winter fog, wide roads, and fast VVIP convoys." }
 ];
 
+// --- SAFE STORAGE WRAPPER (handles SecurityError in TWA/restricted contexts) ---
+const _memStore = {};
+const SafeStorage = {
+    getItem(key) {
+        try { return localStorage.getItem(key); }
+        catch(e) { return _memStore[key] !== undefined ? _memStore[key] : null; }
+    },
+    setItem(key, val) {
+        try { localStorage.setItem(key, val); }
+        catch(e) { _memStore[key] = String(val); }
+    }
+};
+
 // --- LOCAL STORAGE STATE MANAGER ---
 
 const State = {
@@ -50,34 +63,38 @@ const State = {
     doubleCoinsEnd: null,
 
     load() {
-        if (localStorage.getItem("scootykik_coins") !== null) {
-            this.coins = parseInt(localStorage.getItem("scootykik_coins") || "1250");
-            this.highScore = parseFloat(localStorage.getItem("scootykik_highscore") || "0");
-            this.selectedChar = localStorage.getItem("scootykik_char") || "Default Boy";
-            this.selectedVehicle = localStorage.getItem("scootykik_vehicle") || "Scooty";
-            this.selectedTheme = localStorage.getItem("scootykik_theme") || "Tamil Nadu Village";
-            
-            try {
-                this.unlockedChars = JSON.parse(localStorage.getItem("scootykik_unlocked_chars")) || ["Default Boy", "Casual Boy"];
-            } catch (e) {
-                this.unlockedChars = ["Default Boy", "Casual Boy"];
+        try {
+            if (SafeStorage.getItem("scootykik_coins") !== null) {
+                this.coins = parseInt(SafeStorage.getItem("scootykik_coins") || "1250");
+                this.highScore = parseFloat(SafeStorage.getItem("scootykik_highscore") || "0");
+                this.selectedChar = SafeStorage.getItem("scootykik_char") || "Default Boy";
+                this.selectedVehicle = SafeStorage.getItem("scootykik_vehicle") || "Scooty";
+                this.selectedTheme = SafeStorage.getItem("scootykik_theme") || "Tamil Nadu Village";
+                
+                try {
+                    this.unlockedChars = JSON.parse(SafeStorage.getItem("scootykik_unlocked_chars")) || ["Default Boy", "Casual Boy"];
+                } catch (e) {
+                    this.unlockedChars = ["Default Boy", "Casual Boy"];
+                }
+                try {
+                    this.unlockedVehicles = JSON.parse(SafeStorage.getItem("scootykik_unlocked_vehicles")) || ["Scooty"];
+                } catch (e) {
+                    this.unlockedVehicles = ["Scooty"];
+                }
+                try {
+                    this.unlockedThemes = JSON.parse(SafeStorage.getItem("scootykik_unlocked_themes")) || ["Tamil Nadu Village"];
+                } catch (e) {
+                    this.unlockedThemes = ["Tamil Nadu Village"];
+                }
+                
+                this.dailyClaimTime = SafeStorage.getItem("scootykik_daily_claim");
+                const dbCoinsEnd = SafeStorage.getItem("scootykik_dbcoins_end");
+                if (dbCoinsEnd) this.doubleCoinsEnd = new Date(dbCoinsEnd);
+            } else {
+                this.save(); // Initialize default storage
             }
-            try {
-                this.unlockedVehicles = JSON.parse(localStorage.getItem("scootykik_unlocked_vehicles")) || ["Scooty"];
-            } catch (e) {
-                this.unlockedVehicles = ["Scooty"];
-            }
-            try {
-                this.unlockedThemes = JSON.parse(localStorage.getItem("scootykik_unlocked_themes")) || ["Tamil Nadu Village"];
-            } catch (e) {
-                this.unlockedThemes = ["Tamil Nadu Village"];
-            }
-            
-            this.dailyClaimTime = localStorage.getItem("scootykik_daily_claim");
-            const dbCoinsEnd = localStorage.getItem("scootykik_dbcoins_end");
-            if (dbCoinsEnd) this.doubleCoinsEnd = new Date(dbCoinsEnd);
-        } else {
-            this.save(); // Initialize default storage
+        } catch (e) {
+            console.warn("State.load: storage unavailable, using defaults.", e);
         }
         
         // Fail-safe validation for corrupt or missing values
@@ -92,16 +109,20 @@ const State = {
     },
 
     save() {
-        localStorage.setItem("scootykik_coins", this.coins);
-        localStorage.setItem("scootykik_highscore", this.highScore);
-        localStorage.setItem("scootykik_char", this.selectedChar);
-        localStorage.setItem("scootykik_vehicle", this.selectedVehicle);
-        localStorage.setItem("scootykik_theme", this.selectedTheme);
-        localStorage.setItem("scootykik_unlocked_chars", JSON.stringify(this.unlockedChars));
-        localStorage.setItem("scootykik_unlocked_vehicles", JSON.stringify(this.unlockedVehicles));
-        localStorage.setItem("scootykik_unlocked_themes", JSON.stringify(this.unlockedThemes));
-        localStorage.setItem("scootykik_daily_claim", this.dailyClaimTime);
-        localStorage.setItem("scootykik_dbcoins_end", this.doubleCoinsEnd ? this.doubleCoinsEnd.toISOString() : "");
+        try {
+            SafeStorage.setItem("scootykik_coins", this.coins);
+            SafeStorage.setItem("scootykik_highscore", this.highScore);
+            SafeStorage.setItem("scootykik_char", this.selectedChar);
+            SafeStorage.setItem("scootykik_vehicle", this.selectedVehicle);
+            SafeStorage.setItem("scootykik_theme", this.selectedTheme);
+            SafeStorage.setItem("scootykik_unlocked_chars", JSON.stringify(this.unlockedChars));
+            SafeStorage.setItem("scootykik_unlocked_vehicles", JSON.stringify(this.unlockedVehicles));
+            SafeStorage.setItem("scootykik_unlocked_themes", JSON.stringify(this.unlockedThemes));
+            SafeStorage.setItem("scootykik_daily_claim", this.dailyClaimTime);
+            SafeStorage.setItem("scootykik_dbcoins_end", this.doubleCoinsEnd ? this.doubleCoinsEnd.toISOString() : "");
+        } catch (e) {
+            console.warn("State.save: storage unavailable.", e);
+        }
     },
 
     syncUI() {

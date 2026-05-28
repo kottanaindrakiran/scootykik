@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.scootykik.game",
+    "sha256_cert_fingerprints": [
+      "73:26:7F:95:2E:3E:94:15:2D:01:68:D1:53:CB:C8:02:2F:4D:AB:49:13:9A:FE:B2:8F:64:CE:46:EA:F1:8F:D6"
+    ]
+  }
+}]
